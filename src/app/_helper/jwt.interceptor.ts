@@ -12,13 +12,14 @@ export class JwtInterceptor implements HttpInterceptor{
     intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         console.log('inside-->'+' ====== jwt interseptor');
         const user = this.accountService.userValue;
-        const isLoggedIn = user && user[0].token;
+        console.log(user);
+        const isLoggedIn = user && user.token;
         const isApiUrl = req.url.startsWith(environment.apiUrl);
         if( isLoggedIn && isApiUrl ){
-            console.log('token created-->'+user[0].token);
+            console.log('token created-->'+user.token);
             req = req.clone({
                 setHeaders:{
-                    Authorization: `Bearer ${user[0].token}`
+                    Authorization: `Bearer ${user.token}`
                 } 
             });
         }
