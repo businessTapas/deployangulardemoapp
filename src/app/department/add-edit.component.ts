@@ -1,9 +1,10 @@
-﻿import { Component, OnInit } from '@angular/core';
+
+import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '../service';
+import { DepartmentService, AlertService } from '../service';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
@@ -17,28 +18,21 @@ export class AddEditComponent implements OnInit {
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
-        private accountService: AccountService,
+        private departmentService: DepartmentService,
         private alertService: AlertService
     ) {}
 
     ngOnInit() {
         this.id = this.route.snapshot.params['id'];
         this.isAddMode = !this.id;
-        // password not required in edit mode
-        const passwordValidators = [Validators.minLength(6)];
-        if (this.isAddMode) {
-            passwordValidators.push(Validators.required);
-        }
-
+        
         this.form = this.formBuilder.group({
-            firstname: ['', Validators.required],
-            lastname: ['', Validators.required],
-            username: ['', Validators.required],
-            password: ['', passwordValidators]
+            departmentname: ['', Validators.required],
+            description: ['', Validators.required],
         });
 
         if (!this.isAddMode) {
-            this.accountService.getById(this.id)
+            this.departmentService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => this.form.patchValue(x));
         }
@@ -60,14 +54,14 @@ export class AddEditComponent implements OnInit {
 
         this.loading = true;
         if (this.isAddMode) {
-            this.createUser();
+            this.createDepartment();
         } else {
-            this.updateUser();
+            this.updateDepartment();
         }
     }
 
-    private createUser() {
-        this.accountService.register(this.form.value)
+    private createDepartment() {
+        this.departmentService.create(this.form.value)
             .pipe(first())
             .subscribe({
                 next: () => {
@@ -81,8 +75,8 @@ export class AddEditComponent implements OnInit {
             });
     }
 
-    private updateUser() {
-        this.accountService.update(this.id, this.form.value)
+    private updateDepartment() {
+        this.departmentService.update(this.id, this.form.value)
             .pipe(first())
             .subscribe({
                 next: () => {

@@ -8,7 +8,7 @@ export class HomeComponent{
 
     constructor(private accountService: AccountService){
         this.user = this.accountService.userValue;
-        //console.log(this.user[0].firstname);
+        //console.log(this.user.firstname);
     }
 
 }
