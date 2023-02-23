@@ -1,1 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
+.myImg {
+    max-width: 50px;
+    max-height: 50px;
+}

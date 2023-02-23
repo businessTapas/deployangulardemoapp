@@ -45,12 +45,13 @@ export class AccountService {
         this.router.navigate(['/account/login']);
     }
 
-    register(user:User){
+    register(user){
         return this.http.post(`${environment.apiUrl}/users/register`,user);
     }
 
     
     getAll() {
+        console.log('inside service')
         return this.http.get<User[]>(`${environment.apiUrl}/users`);
     }
 

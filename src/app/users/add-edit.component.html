@@ -1,6 +1,27 @@
 ﻿<h1 *ngIf="isAddMode">Add User</h1>
 <h1 *ngIf="!isAddMode">Edit User</h1>
-<form [formGroup]="form" (ngSubmit)="onSubmit()">
+<form [formGroup]="form"  (ngSubmit)="onSubmit()">
+    <div class="form-row">
+        <div class="form-group col">
+            <label for="Department">Department</label>
+            <select class="custom-select mb-3" formControlName="departmentId" >
+          <option value="">Choose Department</option>
+          <option *ngFor="let department of departments" [ngValue]="department.id">
+            {{ department.departmentname }}
+          </option>
+        </select>
+            <div *ngIf="submitted && f.departmentId.errors" class="invalid-feedback">
+                <div *ngIf="f.departmentId.errors.required">Department is required</div>
+            </div>
+        </div>
+        <div class="form-group col">
+            <label for="lastName">User Image</label>
+            <input type="file" formControlName="image" (change)="selectImage($event)" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.image.errors }" />
+            <div *ngIf="submitted && f.image.errors" class="invalid-feedback">
+                <div *ngIf="f.image.errors.required">Last Name is required</div>
+            </div>
+        </div>
+    </div>
     <div class="form-row">
         <div class="form-group col">
             <label for="firstName">First Name</label>

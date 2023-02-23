@@ -3,7 +3,8 @@ import { Router, ActivatedRoute } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
-import { AccountService, AlertService } from '../service';
+import { AccountService, AlertService, DepartmentService } from '../service';
+import { toFormData } from '../_helper/toFormData';
 
 @Component({ templateUrl: 'add-edit.component.html' })
 export class AddEditComponent implements OnInit {
@@ -12,12 +13,15 @@ export class AddEditComponent implements OnInit {
     isAddMode: boolean;
     loading = false;
     submitted = false;
+    departments = null;
+    private file: File | null = null;
 
     constructor(
         private formBuilder: FormBuilder,
         private route: ActivatedRoute,
         private router: Router,
         private accountService: AccountService,
+        private departmentService: DepartmentService,
         private alertService: AlertService
     ) {}
 
@@ -31,20 +35,35 @@ export class AddEditComponent implements OnInit {
         }
 
         this.form = this.formBuilder.group({
+            departmentId: ['', Validators.required],
             firstname: ['', Validators.required],
             lastname: ['', Validators.required],
             username: ['', Validators.required],
-            password: ['', passwordValidators]
+            password: ['', passwordValidators],
+            image:[]
+
         });
+
+        this.departmentService.getAll()
+        .pipe(first())
+        .subscribe(department => this.departments = department);
 
         if (!this.isAddMode) {
             this.accountService.getById(this.id)
                 .pipe(first())
                 .subscribe(x => this.form.patchValue(x));
         }
-    }
+    
+}
 
-    // convenience getter for easy access to form fields
+selectImage(event) {
+    if (event.target.files[0]) {
+        this.file = event.target.files[0];
+       // console.log(this.file);
+    }
+}
+
+// convenience getter for easy access to form fields
     get f() { return this.form.controls; }
 
     onSubmit() {
@@ -67,7 +86,16 @@ export class AddEditComponent implements OnInit {
     }
 
     private createUser() {
-        this.accountService.register(this.form.value)
+       // console.log(this.form.value);
+       var formdata = toFormData(this.form.value);
+            //console.log(formdata);
+            if (this.file) {
+                formdata.append('imagefile', this.file);
+            } else {
+                formdata.append('imagefile', '');
+            }
+            //console.log(formdata);
+        this.accountService.register(formdata)
             .pipe(first())
             .subscribe({
                 next: () => {
@@ -82,7 +110,15 @@ export class AddEditComponent implements OnInit {
     }
 
     private updateUser() {
-        this.accountService.update(this.id, this.form.value)
+            var formdata = toFormData(this.form.value);
+            //console.log(formdata);
+            if (this.file) {
+                formdata.append('imagefile', this.file);
+            } else {
+                formdata.append('imagefile', '');
+            }
+            //console.log(formdata);
+         this.accountService.update(this.id, formdata)
             .pipe(first())
             .subscribe({
                 next: () => {
@@ -93,6 +129,6 @@ export class AddEditComponent implements OnInit {
                     this.alertService.error(error);
                     this.loading = false;
                 }
-            });
+            }); 
     }
 }

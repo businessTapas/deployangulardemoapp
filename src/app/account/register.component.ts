@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService } from '../service';
+import { toFormData } from '../_helper/toFormData';
 
 @Component({ templateUrl: 'register.component.html' })
 export class RegisterComponent implements OnInit {
@@ -43,7 +44,9 @@ export class RegisterComponent implements OnInit {
         }
 
         this.loading = true;
-        this.accountService.register(this.form.value)
+        var formdata = toFormData(this.form.value);
+        //console.log(formdata);
+    this.accountService.register(formdata)
             .pipe(first())
             .subscribe({
                 next: () => {

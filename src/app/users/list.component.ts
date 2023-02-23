@@ -1,17 +1,29 @@
 ﻿import { Component, OnInit } from '@angular/core';
-import { first } from 'rxjs/operators';
+import { map, first } from 'rxjs/operators';
 
 import { AccountService } from '../service';
+import { environment } from "src/environments/environment";
 
-@Component({ templateUrl: 'list.component.html' })
+@Component({ templateUrl: 'list.component.html'})
 export class ListComponent implements OnInit {
     users = null;
-
     constructor(private accountService: AccountService) {}
 
     ngOnInit() {
         this.accountService.getAll()
-            .pipe(first())
+            .pipe(map((res) => {
+                const source = { departmentId: { departmentname: '' }};
+                for ( const key in res) {
+                    if ('imagefile' in res[key] == true && res[key].imagefile != '') {
+                    res[key].imagefile = `${environment.apiUrl}/`+res[key].imagefile;
+                    }
+                    if ('departmentId' in res[key] !== true) {      // ( in or hasOwnProperty )
+                        Object.assign(res[key], source);
+                    }
+                }
+            //    console.log(res)
+                return res;
+            }))
             .subscribe(users => this.users = users);
     }
 
