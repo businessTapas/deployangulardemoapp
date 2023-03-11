@@ -1,0 +1,71 @@
+@use '@angular/material' as material;
+@use "sass:map";
+
+@include material.core();
+
+$custom-primary: material.define-palette(material.$amber-palette, 600);
+$custom-accent: material.define-palette(material.$yellow-palette, 500);
+$custom-warn: material.define-palette(material.$red-palette);
+// extra Colors
+$custom-success: material.define-palette(material.$green-palette);
+$custom-danger: material.define-palette(material.$orange-palette);
+
+
+
+$custom-theme: material.define-light-theme((
+  color: (
+    primary: $custom-primary,
+    accent: $custom-accent,
+    warn: $custom-warn,
+  ),
+   density: 0, 
+));
+
+    html, body { height: 100%; }
+    body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+    mat-form-field { width: 100% }
+    .example-spacer {
+      flex: 1 1 auto;
+    };
+    .modal-row {
+      display: flex;
+      gap: 10px;
+      mat-form-field { width: 100% }
+    };
+    .action {
+      padding: 0px 25px 20px;
+      button {
+      flex: 1;
+      };
+    };
+@include material.all-component-themes($custom-theme);
+.mat-success {
+  background-color: material.get-color-from-palette($custom-success, 500);
+  color: material.get-color-from-palette($custom-success, 500-contrast);
+}
+
+.mat-danger {
+  background-color: material.get-color-from-palette($custom-danger, 500);
+  color: material.get-color-from-palette($custom-danger, 500-contrast);
+} 
+////////////////////////////////////////////////////////////////////////////////
+/*  @include mat-strong-focus-indicators((
+  border-style: dotted,
+  border-width: 4px,
+  border-radius: 2px,
+));  */
+// @include mat-strong-focus-indicators-theme(purple);
+
+/* 
+$angular-10-registration-login-primary: mat-palette($mat-amber, 800);
+$angular-10-registration-login-accent: mat-palette($mat-pink, A200, A100, A400);
+$angular-10-registration-login-warn: mat-palette($mat-red);
+
+$angular-10-registration-login-theme: mat-light-theme(
+  $angular-10-registration-login-primary,
+    $angular-10-registration-login-accent,
+     $angular-10-registration-login-warn,
+);
+
+@include angular-material-theme($angular-10-registration-login-theme);
+ */

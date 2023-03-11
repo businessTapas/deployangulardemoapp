@@ -1,14 +1,21 @@
 <!-- nav -->
-<nav class="navbar navbar-expand navbar-dark bg-dark" *ngIf="user">
-    <div class="navbar-nav">
-        <a class="nav-item nav-link" routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Home</a>
-        <a class="nav-item nav-link" routerLink="/users" routerLinkActive="active">Users</a>
-        <a class="nav-item nav-link" (click)="logout()">Logout</a>
-    </div>
+<nav  *ngIf="user">
+    <mat-toolbar color="primary">
+         <button  mat-icon-button  aria-label="Example icon button with a home icon">
+            <mat-icon routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" color="accent">home</mat-icon>
+           </button>
+           <button  mat-icon-button  aria-label="Example icon button with a home icon">
+            <mat-icon routerLink="/users" routerLinkActive="active" color="accent">supervised_user_circle</mat-icon>
+            </button>
+            <span class="example-spacer"></span>
+        <button  (click)="logout()" mat-raised-button   color= "warn">
+            Logout
+        </button>
+    </mat-toolbar>
 </nav>
 
 <!-- main app container -->
-<div class="app-container" [ngClass]="{ 'bg-light': user }">
+<div class="center" [ngClass]="{ 'bg-light': user }">
      <alert></alert> 
     <router-outlet></router-outlet>
 </div>

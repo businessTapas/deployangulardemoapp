@@ -1,0 +1,88 @@
+﻿<div mat-dialog-title>
+    <h1 *ngIf="isAddMode">Add User</h1>
+    <h1 *ngIf="!isAddMode">Edit User</h1>
+</div>
+
+<form [formGroup]="form"  (ngSubmit)="onSubmit()">
+<div mat-dialog-content class="content">
+    <div class="modal-row">
+        <mat-form-field appearance="outline">
+            <mat-label>Department</mat-label>
+            <mat-select formControlName="departmentId" >
+                <mat-option [value]="">Choose Department</mat-option>
+                <mat-option *ngFor="let department of departments" [value]="department.id">
+                    {{department.departmentname}}
+                </mat-option>
+            </mat-select>        
+             <div *ngIf="submitted && f.departmentId.errors" class="invalid-feedback">
+                <mat-hint>Department is required</mat-hint>
+            </div> 
+        </mat-form-field>
+            <!-- <label for="singleFile">Upload file</label>
+            <input  id="singleFile" formControlName="image" (change)="selectImage($event)"  type="file" [fileUploadInputFor]= "fileUploadQueue"/>
+            <br>
+            
+            <mat-file-upload-queue #fileUploadQueue
+                [fileAlias]="'file'"
+                [httpUrl]="'http://localhost:8180/jax-rs-jersey-application-sample'">
+            
+                <mat-file-upload [file]="file" [id]="i" *ngFor="let file of fileUploadQueue.files; let i = index"></mat-file-upload>
+            </mat-file-upload-queue> -->
+
+<!--              <mat-label>User Image</mat-label>
+ -->            <input  type="file" formControlName="image" (change)="selectImage($event)"  [ngClass]="{ 'is-invalid': submitted && f.image.errors }" placeholder="Upload file" accept=".jpg,.jpeg,.png" />
+             <div *ngIf="submitted && f.image.errors" class="invalid-feedback">
+                <div *ngIf="f.image.errors.required">Image is required</div>
+            </div> 
+
+    </div>
+    <div class="modal-row">
+        <mat-form-field appearance="outline">
+            <mat-label>First Name</mat-label>
+            <input matInput type="text" formControlName="firstname" [ngClass]="{ 'is-invalid': submitted && f.firstname.errors }">
+            <div *ngIf="submitted && f.firstname.errors" class="invalid-feedback">
+                <mat-hint>First name is required</mat-hint>
+            </div>
+        </mat-form-field>
+        <mat-form-field appearance="outline">
+            <mat-label>Last Name</mat-label>
+            <input matInput type="text" formControlName="lastname" [ngClass]="{ 'is-invalid': submitted && f.lastname.errors }">
+            <div *ngIf="submitted && f.lastname.errors" class="invalid-feedback">
+                <mat-hint>Last name is required</mat-hint>
+            </div>
+        </mat-form-field>
+    </div>
+    <div class="modal-row">
+        <mat-form-field appearance="outline">
+            <mat-label>Username</mat-label>
+            <input matInput placeholder="Placeholder" formControlName="username" [ngClass]="{ 'is-invalid': submitted && f.username.errors }">
+<!--             <mat-icon matSuffix>sentiment_very_satisfied</mat-icon>
+ -->            <div *ngIf="submitted && f.username.errors" class="invalid-feedback">
+                <mat-hint>Username is required</mat-hint>
+            </div>
+        </mat-form-field>
+            <mat-form-field appearance="fill">
+            <mat-label>Password
+                <em *ngIf="!isAddMode">(Leave blank to keep the same password)</em>
+            </mat-label>
+            <input matInput [type]="hide ? 'password' : 'text'"  formControlName="password" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.password.errors }">
+            <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'" [attr.aria-pressed]="hide">
+              <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+            </button>
+            <div *ngIf="submitted && f.password.errors" class="invalid-feedback">
+                <mat-hint>Password is required</mat-hint>
+            </div>
+          </mat-form-field>
+    </div>
+   </div>
+     <div mat-dialog-action class="action"> 
+        <button [disabled]="loading"  mat-raised-button disabled  color= "warn">
+            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+            Save
+        </button>
+                      <span class="example-spacer"></span>
+        <button [disabled]="loading" (click)="cancelDialog()" mat-raised-button disabled  color= "warn">
+            Cancel
+        </button>    
+    </div>
+</form>

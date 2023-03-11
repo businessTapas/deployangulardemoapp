@@ -10,6 +10,7 @@ export class LoginComponent implements OnInit {
     form: FormGroup;
     loading = false;
     submitted = false;
+    hide = true;
     constructor(
         private router: Router,
         private route: ActivatedRoute,

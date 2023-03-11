@@ -5,8 +5,9 @@ import { first } from 'rxjs/operators';
 
 import { AccountService, AlertService, DepartmentService } from '../service';
 import { toFormData } from '../_helper/toFormData';
+import { MatDialogRef } from '@angular/material/dialog';
 
-@Component({ templateUrl: 'add-edit.component.html' })
+@Component({ templateUrl: 'dialog-add-edit.component.html' })
 export class AddEditComponent implements OnInit {
     form: FormGroup;
     id: string;
@@ -15,6 +16,7 @@ export class AddEditComponent implements OnInit {
     submitted = false;
     departments = null;
     private file: File | null = null;
+    hide = true;
 
     constructor(
         private formBuilder: FormBuilder,
@@ -22,7 +24,8 @@ export class AddEditComponent implements OnInit {
         private router: Router,
         private accountService: AccountService,
         private departmentService: DepartmentService,
-        private alertService: AlertService
+        private alertService: AlertService,
+        private _dialogRef: MatDialogRef<AddEditComponent>
     ) {}
 
     ngOnInit() {
@@ -100,7 +103,8 @@ selectImage(event) {
             .subscribe({
                 next: () => {
                     this.alertService.success('User added successfully', { keepAfterRouteChange: true });
-                    this.router.navigate(['../'], { relativeTo: this.route });
+                    this._dialogRef.close();
+                   // this.router.navigate(['../'], { relativeTo: this.route });
                 },
                 error: error => {
                     this.alertService.error(error);
@@ -123,12 +127,17 @@ selectImage(event) {
             .subscribe({
                 next: () => {
                     this.alertService.success('Update successful', { keepAfterRouteChange: true });
-                    this.router.navigate(['../../'], { relativeTo: this.route });
+                    this._dialogRef.close();
+                //    this.router.navigate(['../../'], { relativeTo: this.route });
                 },
                 error: error => {
                     this.alertService.error(error);
                     this.loading = false;
                 }
             }); 
+    }
+
+    cancelDialog () {
+        this._dialogRef.close();
     }
 }
